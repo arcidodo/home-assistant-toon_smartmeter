@@ -50,20 +50,20 @@ MIN_TIME_BETWEEN_UPDATES = timedelta(seconds=10)
 
 SENSOR_PREFIX = 'Toon '
 SENSOR_TYPES = {
-    'gasused': ['Gas Used Last Hour', 'm3', 'mdi:fire'],
-    'gasusedcnt': ['Gas Used Cnt', 'm3', 'mdi:fire'],
-    'elecusageflowpulse': ['Power Use', 'Watt', 'mdi:flash'],
-    'elecusageflowlow': ['P1 Power Use Low', 'Watt', 'mdi:flash'],
-    'elecusageflowhigh': ['P1 Power Use High', 'Watt', 'mdi:flash'],
-    'elecprodflowlow': ['P1 Power Prod Low', 'Watt', 'mdi:flash'],
-    'elecprodflowhigh': ['P1 Power Prod High', 'Watt', 'mdi:flash'],
-    'elecusagecntpulse': ['Power Use Cnt', 'kWh', 'mdi:flash'],
-    'elecusagecntlow': ['P1 Power Use Cnt Low', 'kWh', 'mdi:flash'],
-    'elecusagecnthigh': ['P1 Power Use Cnt High', 'kWh', 'mdi:flash'],
-    'elecprodcntlow': ['P1 Power Prod Cnt Low', 'kWh', 'mdi:flash'],
-    'elecprodcnthigh': ['P1 Power Prod Cnt High', 'kWh', 'mdi:flash'],
-    'elecsolar': ['P1 Power Solar', 'Watt', 'mdi:weather-sunny'],
-    'elecsolarcnt': ['P1 Power Solar Cnt', 'kWh', 'mdi:weather-sunny'],
+    'gasused': ['Gas Used Last Hour', 'm3', 'measurement', 'mdi:fire'],
+    'gasusedcnt': ['Gas Used Cnt', 'm3', 'measurement', 'mdi:fire'],
+    'elecusageflowpulse': ['Power Use', 'Watt', 'measurement', 'mdi:flash'],
+    'elecusageflowlow': ['P1 Power Use Low', 'measurement', 'Watt', 'mdi:flash'],
+    'elecusageflowhigh': ['P1 Power Use High', 'measurement', 'Watt', 'mdi:flash'],
+    'elecprodflowlow': ['P1 Power Prod Low', 'measurement', 'Watt', 'mdi:flash'],
+    'elecprodflowhigh': ['P1 Power Prod High', 'measurement', 'Watt', 'mdi:flash'],
+    'elecusagecntpulse': ['Power Use Cnt', 'measurement', 'kWh', 'mdi:flash'],
+    'elecusagecntlow': ['P1 Power Use Cnt Low', 'measurement', 'kWh', 'mdi:flash'],
+    'elecusagecnthigh': ['P1 Power Use Cnt High', 'measurement', 'kWh', 'mdi:flash'],
+    'elecprodcntlow': ['P1 Power Prod Cnt Low', 'measurement', 'kWh', 'mdi:flash'],
+    'elecprodcnthigh': ['P1 Power Prod Cnt High', 'measurement', 'kWh', 'mdi:flash'],
+    'elecsolar': ['P1 Power Solar', 'measurement', 'Watt', 'mdi:weather-sunny'],
+    'elecsolarcnt': ['P1 Power Solar Cnt', 'measurement', 'kWh', 'mdi:weather-sunny'],
     'heat': ['P1 Heat', '', 'mdi:fire'],
 }
 
@@ -85,11 +85,12 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     for resource in config[CONF_RESOURCES]:
         sensor_type = resource.lower()
         name = SENSOR_PREFIX + SENSOR_TYPES[resource][0]
-        unit = SENSOR_TYPES[resource][1]
-        icon = SENSOR_TYPES[resource][2]
+        state_class = SENSOR_TYPES[resource][1]
+        unit = SENSOR_TYPES[resource][2]
+        icon = SENSOR_TYPES[resource][3]
 
-        _LOGGER.debug("Adding Toon Smart Meter sensor: {}, {}, {}, {}".format(name, sensor_type, unit, icon))
-        entities.append(ToonSmartMeterSensor(data, name, sensor_type, unit, icon))
+        _LOGGER.debug("Adding Toon Smart Meter sensor: {}, {}, {}, {}".format(name, sensor_type, state_class, unit, icon))
+        entities.append(ToonSmartMeterSensor(data, name, sensor_type, state_class, unit, icon))
 
     async_add_entities(entities, True)
 
@@ -139,12 +140,13 @@ class ToonSmartMeterData(object):
 class ToonSmartMeterSensor(Entity):
     """Representation of a Smart Meter connected to Toon."""
 
-    def __init__(self, data, name, sensor_type, unit, icon):
+    def __init__(self, data, name, sensor_type, state_class, unit, icon):
         """Initialize the sensor."""
         self._data = data
         self._name = name
         self._type = sensor_type
         self._unit = unit
+        self._class = state_class
         self._icon = icon
 
         self._state = None
@@ -175,7 +177,10 @@ class ToonSmartMeterSensor(Entity):
     def state(self):
         """Return the state of the sensor. (total/current power consumption/production or total gas used)"""
         return self._state
-
+    @property
+    def state_class(self):
+        """Return the state class of this entity, if any."""
+        return self._class
     @property
     def unit_of_measurement(self):
         """Return the unit of measurement of this entity, if any."""
