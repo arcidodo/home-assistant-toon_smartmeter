@@ -50,9 +50,9 @@ MIN_TIME_BETWEEN_UPDATES = timedelta(seconds=10)
 
 SENSOR_PREFIX = 'Toon '
 SENSOR_TYPES = {
-    'gasused': ['Gas Used Last Hour', 'm3', 'measurement', 'mdi:fire'],
-    'gasusedcnt': ['Gas Used Cnt', 'm3', 'measurement', 'mdi:fire'],
-    'elecusageflowpulse': ['Power Use', 'Watt', 'measurement', 'mdi:flash'],
+    'gasused': ['Gas Used Last Hour', 'measurement', 'm3', 'mdi:fire'],
+    'gasusedcnt': ['Gas Used Cnt', 'measurement', 'm3', 'mdi:fire'],
+    'elecusageflowpulse': ['Power Use', 'measurement', 'Watt', 'mdi:flash'],
     'elecusageflowlow': ['P1 Power Use Low', 'measurement', 'Watt', 'mdi:flash'],
     'elecusageflowhigh': ['P1 Power Use High', 'measurement', 'Watt', 'mdi:flash'],
     'elecprodflowlow': ['P1 Power Prod Low', 'measurement', 'Watt', 'mdi:flash'],
