@@ -64,7 +64,7 @@ SENSOR_TYPES = {
     'elecprodcnthigh': ['P1 Power Prod Cnt High', 'measurement', 'kWh', 'mdi:flash'],
     'elecsolar': ['P1 Power Solar', 'measurement', 'Watt', 'mdi:weather-sunny'],
     'elecsolarcnt': ['P1 Power Solar Cnt', 'measurement', 'kWh', 'mdi:weather-sunny'],
-    'heat': ['P1 Heat', '', 'mdi:fire'],
+    'heat': ['P1 Heat', '', '', 'mdi:fire'],
 }
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
