@@ -89,7 +89,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         unit = SENSOR_TYPES[resource][2]
         icon = SENSOR_TYPES[resource][3]
 
-        _LOGGER.debug("Adding Toon Smart Meter sensor: {}, {}, {}, {}".format(name, sensor_type, state_class, unit, icon))
+        _LOGGER.debug("Adding Toon Smart Meter sensor: {}, {}, {}, {}, {}".format(name, sensor_type, state_class, unit, icon))
         entities.append(ToonSmartMeterSensor(data, name, sensor_type, state_class, unit, icon))
 
     async_add_entities(entities, True)
@@ -146,7 +146,7 @@ class ToonSmartMeterSensor(Entity):
         self._name = name
         self._type = sensor_type
         self._unit = unit
-        self._class = state_class
+        self._stateclass = state_class
         self._icon = icon
 
         self._state = None
@@ -180,7 +180,7 @@ class ToonSmartMeterSensor(Entity):
     @property
     def state_class(self):
         """Return the state class of this entity, if any."""
-        return self._class
+        return self._stateclass
     @property
     def unit_of_measurement(self):
         """Return the unit of measurement of this entity, if any."""
